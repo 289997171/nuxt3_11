@@ -10,6 +10,12 @@ export default defineNuxtConfig({
     // or 'silent' to allow you to handle yourself with `dev:ssr-logs` hook
   },
   experimental: {
-    sharedPrerenderData: true
+    sharedPrerenderData: true,
+    defaults: {
+      nuxtLink: {
+        activeClass: 'text-green',
+        trailingSlash: 'append'
+      }
+    }
   }
 })
