@@ -22,6 +22,9 @@
     <div>
       调用clear后,data将清空,并且不会真正中断http请求,http请求任然会完成,但不会修改data,那么有什么意义呢?
     </div>
+    <div>
+      意义:当某些已经请求并获得的数据,再某种条件达成后需要清理掉,那么可以使用clear
+    </div>
   </div>
 </template>
 
