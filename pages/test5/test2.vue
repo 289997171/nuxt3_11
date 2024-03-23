@@ -1,13 +1,13 @@
 <template>
   <div>
-    test1
+    test2
   </div>
 </template>
 
 <script setup lang="ts">
-// 客户端和服务器端都会添加head内容
-useHead({
-  title: 'HEAD Client',
+// 仅仅服务器端请求的时候才添加head
+useServerHead({
+  title: 'HEAD Server',
   meta: [
     {
       name: 'description',
@@ -15,7 +15,6 @@ useHead({
     }
   ]
 })
-
 </script>
 
 <style scoped>
