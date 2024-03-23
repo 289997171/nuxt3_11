@@ -4,5 +4,9 @@ export default defineNuxtConfig({
   modules: [
     '@unocss/nuxt',
   ],
-  css: ['@unocss/reset/tailwind.css']
+  css: ['@unocss/reset/tailwind.css'],
+  features: {
+    devLogs: true
+    // or 'silent' to allow you to handle yourself with `dev:ssr-logs` hook
+  },
 })
