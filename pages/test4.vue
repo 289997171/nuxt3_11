@@ -14,7 +14,5 @@
 </script>
 
 <style scoped>
-.sl {
-  @apply text-green;
-}
+
 </style>
