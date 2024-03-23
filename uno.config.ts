@@ -34,4 +34,7 @@ export default defineConfig({
         transformerDirectives(),
         transformerVariantGroup(),
     ],
+    safelist: [
+        'text-green'
+    ]
 })
