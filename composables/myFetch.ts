@@ -37,7 +37,7 @@ export const $myFetch = $fetch.create({
         console.log('开始请求', JSON.stringify(context));
 
         // TODO 添加通用header
-        if (context.options.headers) (context.options.headers as any)['token1111'] = 'token1111'
+        if (context.options.headers) (context.options.headers as any).token1111 = 'token1111'
         else context.options.headers = {'token1111': 'token1111'}
     },
 

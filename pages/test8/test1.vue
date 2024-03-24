@@ -22,7 +22,9 @@ const {data, execute} = await useAsyncData('/api/test8/req', ()=> $myFetch('/api
     username: 'zhangshan',
     password: 'lisi',
   },
-}))
+}), {
+  deep: false
+})
 </script>
 
 <style scoped>
