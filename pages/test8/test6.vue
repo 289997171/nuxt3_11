@@ -3,12 +3,18 @@
     <div>
       data: {{data}}
     </div>
+    <div>
+      error: {{error}}
+    </div>
+    <div>
+      <button class="px-4 py-2 shadow" @click="execute">测试</button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// 服务器端和客户端都会执行一次
-const data = await $myFetch('/api/counter')
+const {data, error, execute} = await useAsyncData('/api/test8/error3', ()=> $myFetch('/api/test8/error3', {
+}))
 </script>
 
 <style scoped>

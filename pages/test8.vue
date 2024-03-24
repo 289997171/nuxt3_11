@@ -7,6 +7,7 @@
       <NuxtLink to="/test8/test4">Test4</NuxtLink>
       <NuxtLink to="/test8/test5">Test5</NuxtLink>
       <NuxtLink to="/test8/test6">Test6</NuxtLink>
+      <NuxtLink to="/test8/test7">Test7</NuxtLink>
     </nav>
     <NuxtPage/>
   </div>

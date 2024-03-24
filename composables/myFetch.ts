@@ -1,5 +1,4 @@
 import type {FetchContext, FetchResponse} from "ofetch";
-import {H3Headers} from "h3";
 
 export const $myFetch = $fetch.create({
     // baseURL?: string;
@@ -43,14 +42,17 @@ export const $myFetch = $fetch.create({
 
     onRequestError(context: FetchContext & { error: Error }): Promise<void> | void {
         console.error('请求错误', JSON.stringify(context))
-    },
-
-    onResponse(context: FetchContext & { response: FetchResponse<ResponseType> }): Promise<void> | void {
-        console.log('接收到响应', JSON.stringify(context))
         if (process.server) {
             // 服务器端通用处理
         } else {
             // 客户端通用处理
+        }
+    },
+
+    onResponse(context: FetchContext & { response: FetchResponse<ResponseType> }): Promise<void> | void {
+        console.log('接收到响应', JSON.stringify(context))
+        if (process.client && context.response.status == 200 && context.response._data.code) {
+            alert(`自定义错误 - ${context.response._data.message}`)
         }
     },
 
@@ -60,6 +62,11 @@ export const $myFetch = $fetch.create({
             // 服务器端通用处理
         } else {
             // 客户端通用处理
+            //showError({status: context.response.status, statusMessage: context.response.statusText})
+            // if (context.response.status >= 500) {
+            //     // TODO 因为500错误会retry,需要考虑多次提示的情况
+            // } else
+                alert(`错误${context.response._data.message}`)
         }
     }
 })

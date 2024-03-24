@@ -13,7 +13,13 @@
 </template>
 
 <script setup lang="ts">
-const {data, error, execute} = await useAsyncData('/api/test8/error2', ()=> $myFetch('/api/test8/error2'))
+import type {FetchContext, FetchResponse} from "ofetch";
+
+const {data, error, execute} = await useAsyncData('/api/test8/error2', ()=> $myFetch('/api/test8/error2', {
+  // onResponseError(context: FetchContext & { response: FetchResponse<any> }): Promise<void> | void {
+  //   if (process.client) alert('xxxx')
+  // }
+}))
 </script>
 
 <style scoped>
