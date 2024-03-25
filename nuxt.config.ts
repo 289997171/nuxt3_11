@@ -17,5 +17,6 @@ export default defineNuxtConfig({
         trailingSlash: 'append'
       }
     }
-  }
+  },
+  ssr: false,
 })
