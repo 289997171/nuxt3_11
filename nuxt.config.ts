@@ -20,7 +20,7 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    '/admin/**' : {ssr: false},
+    //'/admin/**' : {ssr: false},
     // '/test9/test1': {prerender: true},
     // '/test9/test2': {prerender: false},
     // Homepage pre-rendered at build time
