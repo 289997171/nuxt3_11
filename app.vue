@@ -5,8 +5,8 @@
 
       <div class="flex flex-row">
         <!--Left-->
-        <aside class="w-64 h-100vh sticky top-0" >
-          <ul class=" h-full overflow-y-scroll">
+        <aside class="w-64 h-100vh sticky top-0 overflow-y-scroll" >
+          <ul>
             <li v-for="idx in 100">{{idx}}</li>
           </ul>
         </aside>
