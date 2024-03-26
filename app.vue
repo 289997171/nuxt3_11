@@ -3,17 +3,19 @@
     <Body>
       <NuxtLoadingIndicator/>
 
-      <div class="flex flex-row h-100vh">
+      <div class="flex flex-row">
         <!--Left-->
-        <aside class="w-64 h-full bg-red" ></aside>
+        <aside class="w-64 h-100vh sticky top-0" >
+          <ul class=" h-full overflow-y-scroll">
+            <li v-for="idx in 100">{{idx}}</li>
+          </ul>
+        </aside>
 
         <!--Right-->
-        <aside class="flex-1 h-full flex flex-col bg-yellow">
-          <header class="h-20 bg-black"></header>
-          <div class="flex-1 overscroll-y-scroll flex flex-col justify-between">
-            <NuxtPage class="bg-pink container mx-auto"/>
-            <footer class="h-40 bg-green">123</footer>
-          </div>
+        <aside class="flex-1 bg-yellow">
+          <header class="h-20 bg-black sticky top-0"></header>
+          <NuxtPage class="min-h-[calc(100vh-240px)] bg-pink container mx-auto"/>
+          <footer class="h-40 bg-green">123</footer>
         </aside>
       </div>
     </Body>

@@ -8,6 +8,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  scrollToTop: true
+})
 </script>
 
 <style scoped>
