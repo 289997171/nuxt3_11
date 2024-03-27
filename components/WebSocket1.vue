@@ -63,6 +63,10 @@ const isConnecting = ref(false)
 
 // 接收到消息处理
 const log = (user: string, ...args: string[]) => {
+  if (args[0] === 'pong') {
+    console.log(`收到心跳包,延迟 ${Date.now() - pingBegin}ms`)
+    return
+  }
   console.log("[ws]", user, ...args);
   messages.value.push({
     id: 0,
@@ -145,9 +149,11 @@ const send = () => {
   message.value = "";
 };
 
+let pingBegin = 0
 // 发送心跳包
 const ping = () => {
-  log("ws", "Sending ping");
+  console.log('发送心跳包')
+  pingBegin = Date.now()
   ws!.send("ping");
 };
 
@@ -161,7 +167,7 @@ let pingTimer = 0
 watch(isConnecting, (newValue)=> {
   clearInterval(pingTimer)
   if (newValue) {
-    pingTimer = setInterval(ping, 3000)
+    pingTimer = setInterval(ping, 10000)
   }
 })
 
