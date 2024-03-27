@@ -2,16 +2,19 @@
   <div class="h-screen flex flex-col justify-between">
     <main>
       <!-- Messages -->
-      <div id="messages" class="flex-grow flex flex-col justify-end px-4 pt-8 pb-21 sm:pb-12 bg-slate-900 min-h-screen">
+      <div @click="sendTo = ''" id="messages" class="flex-grow flex flex-col justify-end px-4 pt-8 pb-21 sm:pb-12 bg-slate-900 min-h-screen">
         <div class="flex items-center mb-4 overflow-x-auto" v-for="message in messages" :key="message.id">
-          <div class="flex flex-col">
-            <p class="text-gray-500 mb-1 text-xs">{{ message.user }} :</p>
+          <div class="flex flex-col" :class="{'w-full items-end': message.user === userId}">
+            <p class="text-gray-500 mb-1 text-xs"
+               @click.stop="()=> {if (message.user !== 'ws' && message.user !== 'server' && message.user !== userId) sendTo = message.user}">
+              {{message.sendTo === userId ? 'private from ' :''}}
+              {{message.sendTo && message.user === userId ? 'private to' : ''}}
+              {{ message.user }} {{ message.created_at }}</p>
             <div class="flex items-center">
               <div class=" bg-gray-800 rounded-lg p-2">
                 <p class="text-white">{{ message.message }}</p>
               </div>
             </div>
-            <p class="text-gray-500 mt-1 text-xs ml-10">{{ message.created_at }}</p>
           </div>
         </div>
       </div>
@@ -25,11 +28,13 @@
         </div>
         <div class="flex w-full">
           <button :disabled="!isConnecting" class="disabled:(bg-gray-300 pointer-events-none) bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 w-1/4" @click="send">
-            Send
+            {{ sendTo ? `to ${sendTo}` : 'Send'}}
           </button>
+          <!-- 心跳包定时发送
           <button :disabled="!isConnecting" class="disabled:(bg-gray-300 pointer-events-none) bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 w-1/4" @click="ping">
             Ping
           </button>
+          -->
           <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 w-1/4" @click="connect">
             {{isConnecting ? 'Reconnect' : 'Connect'}}
           </button>
@@ -49,11 +54,13 @@
 let ws: WebSocket | undefined;
 
 const message = ref<string>("");
-const messages = useState<{ id: number, user: string, message: string, created_at: string }[]>(() => []);
+const messages = useState<{ id: number, user: string, message: string, sendTo: string|null, created_at: string }[]>(() => []);
 
-const userId = useCookie<string>("userId")
+const userId = ref<string>("")
 
 const isConnecting = ref(false)
+
+const sendTo = ref<string>("")
 
 // 从数据库中获取历史消息
 // if (!messages.value.length) {
@@ -62,16 +69,17 @@ const isConnecting = ref(false)
 // }
 
 // 接收到消息处理
-const log = (user: string, ...args: string[]) => {
-  if (args[0] === 'pong') {
+const log = (user: string, message: string, sendTo: string | null = null) => {
+  if (message === 'pong') {
     console.log(`收到心跳包,延迟 ${Date.now() - pingBegin}ms`)
     return
   }
-  console.log("[ws]", user, ...args);
+  console.log("[ws]", user, message);
   messages.value.push({
     id: 0,
-    message: args.join(" "),
-    user: user,
+    message,
+    user,
+    sendTo,
     created_at: new Date().toLocaleString(),
   });
   scroll();
@@ -90,15 +98,15 @@ const connect = async () => {
     clear();
   }
 
-  log("ws", "Connecting to", url, "...");
+  log("ws", `Connecting to ${url} ...`);
   ws = new WebSocket(url);
 
   // 添加接收到消息回调
   ws.addEventListener("message", (event) => {
     if (event.data.startsWith("{")) {
       // JSON 数据
-      const {user , message} = JSON.parse(event.data)
-      log(user, message)
+      const {user, message, sendTo} = JSON.parse(event.data)
+      log(user, message, sendTo)
     } else {
       const user = 'system'
       const message = event.data
@@ -144,7 +152,10 @@ const scroll = () => {
 const send = () => {
   console.log("sending message...");
   if (message.value) {
-    ws!.send(message.value);
+    // 发送给指定的人
+    if (sendTo.value) ws!.send(JSON.stringify({sendTo: sendTo.value, message: message.value}))
+    // 发送给通道中所有人
+    else ws!.send(message.value);
   }
   message.value = "";
 };

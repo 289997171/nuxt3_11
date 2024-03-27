@@ -1,7 +1,7 @@
 import type {Peer} from "crossws";
 import {getQuery} from "ufo";
 
-const users = new Map<string, { online: boolean }>();
+const users = new Map<string, Peer>();
 const channel = 'chatroom'
 
 export default defineWebSocketHandler({
@@ -10,12 +10,12 @@ export default defineWebSocketHandler({
         console.log(`[ws] open ${peer}`);
 
         const userId = getUserId(peer);
-        users.set(userId, {online: true});
+        users.set(userId, peer);
 
         const stats = getStats();
         peer.send({
             user: "server",
-            message: `Welcome to the server ${userId}! (Online users: ${stats.online}/${stats.total})`,
+            message: `Welcome to the server ${userId}! (Online users: ${stats.online}`,
         });
 
         peer.subscribe(channel);
@@ -32,15 +32,32 @@ export default defineWebSocketHandler({
         }
 
         const userId = getUserId(peer);
-        const _message = {
-            user: userId,
-            message: message.text(),
-        };
+        const str = message.text()
 
-        // 将消息返回给客户端
-        peer.send(_message); // echo back
-        // 将消息公告给通道中其他用户
-        peer.publish(channel, _message);
+        if (str.startsWith("{")) {
+            const _message = {
+                user: userId,
+                ...JSON.parse(str) // {sendTo, message}
+            }
+
+            const sendToPeer = users.get(_message.sendTo)
+            if (sendToPeer) {
+                // 将消息返回给客户端
+                peer.send(_message);
+                // 将消息发送给指定客户端
+                sendToPeer.send(_message)
+            }
+        } else {
+            const _message = {
+                user: userId,
+                message: str
+            }
+            // 将消息返回给客户端
+            peer.send(_message); // echo back
+            // 将消息公告给通道中其他用户
+            peer.publish(channel, _message);
+        }
+
 
         // Store message in database
         //await addMessage(userId, message.text());
@@ -50,7 +67,7 @@ export default defineWebSocketHandler({
         console.log(`[ws] close ${peer}`);
 
         const userId = getUserId(peer);
-        users.set(userId, {online: false});
+        users.delete(userId);
     },
     // 异常捕获
     error(peer, error) {
@@ -73,6 +90,5 @@ function getUserId(peer: Peer) {
 }
 
 function getStats() {
-    const online = Array.from(users.values()).filter((u) => u.online).length;
-    return {online, total: users.size};
+    return {online: users.size};
 }
