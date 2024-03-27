@@ -156,6 +156,20 @@ const ping = () => {
 //   scroll();
 // });
 
+// region 发送心跳包
+let pingTimer = 0
+watch(isConnecting, (newValue)=> {
+  clearInterval(pingTimer)
+  if (newValue) {
+    pingTimer = setInterval(ping, 3000)
+  }
+})
+
+onBeforeMount(()=> {
+  clearInterval(pingTimer)
+})
+// endregion
+
 useServerHead({
   title: "Nuxt Chat",
 })
