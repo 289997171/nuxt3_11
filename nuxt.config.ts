@@ -18,6 +18,11 @@ export default defineNuxtConfig({
       }
     }
   },
+  nitro: {
+    experimental: {
+      websocket: true
+    }
+  },
   ssr: true,
   routeRules: {
     //'/admin/**' : {ssr: false},
