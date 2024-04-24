@@ -18,6 +18,11 @@ export default defineNuxtConfig({
       }
     }
   },
+  runtimeConfig: {
+    public: {
+      MYSQL_USERNAME: process.env['MYSQL_USERNAME']
+    }
+  },
   nitro: {
     experimental: {
       websocket: true
