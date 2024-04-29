@@ -7,7 +7,8 @@
     "dev": "nuxt dev --dotenv .env.local",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "build & run": "nuxt build & node .\\.output\\server\\index.mjs"
   },
   "dependencies": {
     "nuxt": "^3.11.1",

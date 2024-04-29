@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    //'/admin/**' : {ssr: false},
+    '/admin/**' : {ssr: false},
     // '/test9/test1': {prerender: true},
     // '/test9/test2': {prerender: false},
     // Homepage pre-rendered at build time
@@ -38,9 +38,9 @@ export default defineNuxtConfig({
     // // Products page generated on demand, revalidates in background, cached until API response changes
     // '/products': { swr: true },
     // // Product page generated on demand, revalidates in background, cached for 1 hour (3600 seconds)
-    // '/products/**': { swr: 3600 },
+    // '/': { swr: 60 },
     // // Blog posts page generated on demand, revalidates in background, cached on CDN for 1 hour (3600 seconds)
-    // '/blog': { isr: 3600 },
+    '/': { isr: 60 },
     // // Blog post page generated on demand once until next deployment, cached on CDN
     // '/blog/**': { isr: true },
     // // Admin dashboard renders only on client-side
